@@ -27,6 +27,6 @@ dependencies {
     implementation ("com.jayway.jsonpath:json-path")
 }
 
-tasks.named("test") {
+tasks.named<Test>("test") {
     useJUnitPlatform()
 }
