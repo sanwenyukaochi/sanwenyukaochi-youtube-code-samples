@@ -1,0 +1,2 @@
+rootProject.name = "sanwenyukaochi-youtube-code-samples"
+include(":spring-data-json-projection")
