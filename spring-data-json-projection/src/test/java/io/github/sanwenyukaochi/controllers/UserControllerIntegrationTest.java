@@ -20,19 +20,19 @@ import org.springframework.web.context.WebApplicationContext;
 @DisplayName("User API integration tests")
 class UserControllerIntegrationTest {
 
-  @Autowired
-  private WebApplicationContext webApplicationContext;
+    @Autowired private WebApplicationContext webApplicationContext;
 
-  private MockMvc mockMvc;
+    private MockMvc mockMvc;
 
-  private String createUserRequestJson;
-  private String expectedUserResponseJson;
+    private String createUserRequestJson;
+    private String expectedUserResponseJson;
 
-  @BeforeEach
-  void setUp() {
-    mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
-    createUserRequestJson = """
+        createUserRequestJson =
+                """
         {
           "data": {
             "user": {
@@ -48,25 +48,28 @@ class UserControllerIntegrationTest {
         }
         """;
 
-    expectedUserResponseJson = """
+        expectedUserResponseJson =
+                """
         {
           "id": 1001,
           "nickname": "alice",
           "company": "Acme"
         }
         """;
-  }
+    }
 
-  @Test
-  @DisplayName("Return flat JSON from POST /users")
-  void testCreateUser() throws Exception {
-    ResultActions response = mockMvc.perform(post("/users")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(createUserRequestJson));
+    @Test
+    @DisplayName("Return flat JSON from POST /users")
+    void testCreateUser() throws Exception {
+        ResultActions response =
+                mockMvc.perform(
+                        post("/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(createUserRequestJson));
 
-    response.andExpectAll(
-        status().isOk(),
-        content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON),
-        content().json(expectedUserResponseJson, JsonCompareMode.STRICT));
-  }
+        response.andExpectAll(
+                status().isOk(),
+                content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON),
+                content().json(expectedUserResponseJson, JsonCompareMode.STRICT));
+    }
 }

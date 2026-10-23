@@ -19,24 +19,24 @@ import org.springframework.mock.http.MockHttpInputMessage;
 @DisplayName("User JSON projection")
 class UserPayloadTest {
 
-  private ProjectingJacksonHttpMessageConverter converter;
+    private ProjectingJacksonHttpMessageConverter converter;
 
-  private static final Long USER_ID = 1001L;
-  private static final String USER_NICKNAME = "alice";
-  private static final String COMPANY_NAME = "Acme";
+    private static final Long USER_ID = 1001L;
+    private static final String USER_NICKNAME = "alice";
+    private static final String COMPANY_NAME = "Acme";
 
-  private String userJson;
-  private String userJsonWithUnmappedFields;
-  private String userJsonWithMissingFields;
-  private String userJsonWithNullFields;
-  private String userJsonWithInvalidId;
+    private String userJson;
+    private String userJsonWithUnmappedFields;
+    private String userJsonWithMissingFields;
+    private String userJsonWithNullFields;
+    private String userJsonWithInvalidId;
 
-  @BeforeEach
-  void setUp() {
-    converter = new ProjectingJacksonHttpMessageConverter();
+    @BeforeEach
+    void setUp() {
+        converter = new ProjectingJacksonHttpMessageConverter();
 
-    userJson =
-        """
+        userJson =
+                """
         {
           "data": {
             "user": {
@@ -52,8 +52,8 @@ class UserPayloadTest {
         }
         """;
 
-    userJsonWithUnmappedFields =
-        """
+        userJsonWithUnmappedFields =
+                """
         {
           "requestId": "ignored",
           "data": {
@@ -71,8 +71,8 @@ class UserPayloadTest {
         }
         """;
 
-    userJsonWithMissingFields =
-        """
+        userJsonWithMissingFields =
+                """
         {
           "data": {
             "user": {
@@ -82,8 +82,8 @@ class UserPayloadTest {
         }
         """;
 
-    userJsonWithNullFields =
-        """
+        userJsonWithNullFields =
+                """
         {
           "data": {
             "user": {
@@ -99,8 +99,8 @@ class UserPayloadTest {
         }
         """;
 
-    userJsonWithInvalidId =
-        """
+        userJsonWithInvalidId =
+                """
         {
           "data": {
             "user": {
@@ -109,64 +109,66 @@ class UserPayloadTest {
           }
         }
         """;
-  }
+    }
 
-  @Test
-  @DisplayName("Map nested JSON to user fields")
-  void testReadUserPayload() throws IOException {
-    UserPayload payload = readPayload(userJson);
+    @Test
+    @DisplayName("Map nested JSON to user fields")
+    void testReadUserPayload() throws IOException {
+        UserPayload payload = readPayload(userJson);
 
-    assertAll(
-        () -> assertEquals(USER_ID, payload.getId()),
-        () -> assertEquals(USER_NICKNAME, payload.getNickname()),
-        () -> assertEquals(COMPANY_NAME, payload.getCompany()));
-  }
+        assertAll(
+                () -> assertEquals(USER_ID, payload.getId()),
+                () -> assertEquals(USER_NICKNAME, payload.getNickname()),
+                () -> assertEquals(COMPANY_NAME, payload.getCompany()));
+    }
 
-  @Test
-  @DisplayName("Ignore extra fields")
-  void testReadUserPayloadWithUnmappedFields() throws IOException {
-    UserPayload payload = readPayload(userJsonWithUnmappedFields);
+    @Test
+    @DisplayName("Ignore extra fields")
+    void testReadUserPayloadWithUnmappedFields() throws IOException {
+        UserPayload payload = readPayload(userJsonWithUnmappedFields);
 
-    assertAll(
-        () -> assertEquals(USER_ID, payload.getId()),
-        () -> assertEquals(USER_NICKNAME, payload.getNickname()),
-        () -> assertEquals(COMPANY_NAME, payload.getCompany()));
-  }
+        assertAll(
+                () -> assertEquals(USER_ID, payload.getId()),
+                () -> assertEquals(USER_NICKNAME, payload.getNickname()),
+                () -> assertEquals(COMPANY_NAME, payload.getCompany()));
+    }
 
-  @Test
-  @DisplayName("Return null for missing fields")
-  void testReadUserPayloadWithMissingFields() throws IOException {
-    UserPayload payload = readPayload(userJsonWithMissingFields);
+    @Test
+    @DisplayName("Return null for missing fields")
+    void testReadUserPayloadWithMissingFields() throws IOException {
+        UserPayload payload = readPayload(userJsonWithMissingFields);
 
-    assertAll(
-        () -> assertEquals(USER_ID, payload.getId()),
-        () -> assertNull(payload.getNickname()),
-        () -> assertNull(payload.getCompany()));
-  }
+        assertAll(
+                () -> assertEquals(USER_ID, payload.getId()),
+                () -> assertNull(payload.getNickname()),
+                () -> assertNull(payload.getCompany()));
+    }
 
-  @Test
-  @DisplayName("Keep null values")
-  void testReadUserPayloadWithNullFields() throws IOException {
-    UserPayload payload = readPayload(userJsonWithNullFields);
+    @Test
+    @DisplayName("Keep null values")
+    void testReadUserPayloadWithNullFields() throws IOException {
+        UserPayload payload = readPayload(userJsonWithNullFields);
 
-    assertAll(
-        () -> assertNull(payload.getId()),
-        () -> assertNull(payload.getNickname()),
-        () -> assertNull(payload.getCompany()));
-  }
+        assertAll(
+                () -> assertNull(payload.getId()),
+                () -> assertNull(payload.getNickname()),
+                () -> assertNull(payload.getCompany()));
+    }
 
-  @Test
-  @DisplayName("Fail when reading an invalid ID")
-  void testReadUserPayloadWithInvalidId() throws IOException {
-    UserPayload payload = readPayload(userJsonWithInvalidId);
+    @Test
+    @DisplayName("Fail when reading an invalid ID")
+    void testReadUserPayloadWithInvalidId() throws IOException {
+        UserPayload payload = readPayload(userJsonWithInvalidId);
 
-    assertThrows(MappingException.class, payload::getId);
-  }
+        assertThrows(MappingException.class, payload::getId);
+    }
 
-  private UserPayload readPayload(String json) throws IOException {
-    MockHttpInputMessage input = new MockHttpInputMessage(json.getBytes(StandardCharsets.UTF_8));
-    input.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+    private UserPayload readPayload(String json) throws IOException {
+        MockHttpInputMessage input =
+                new MockHttpInputMessage(json.getBytes(StandardCharsets.UTF_8));
+        input.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-    return (UserPayload) converter.read(ResolvableType.forClass(UserPayload.class), input, null);
-  }
+        return (UserPayload)
+                converter.read(ResolvableType.forClass(UserPayload.class), input, null);
+    }
 }
