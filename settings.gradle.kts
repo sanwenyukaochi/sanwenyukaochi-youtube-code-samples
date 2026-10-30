@@ -1,2 +1,3 @@
 rootProject.name = "sanwenyukaochi-youtube-code-samples"
 include(":spring-data-json-projection")
+include(":spring-cloud-config-server")
