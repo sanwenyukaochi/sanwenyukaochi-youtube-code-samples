@@ -6,6 +6,7 @@ plugins {
 
 configure<SpotlessExtension> {
     encoding("UTF-8")
+
     java {
         target("**/*.java")
         forbidWildcardImports()
@@ -18,6 +19,58 @@ configure<SpotlessExtension> {
         importOrder()
         removeUnusedImports()
         formatAnnotations()
+        trimTrailingWhitespace()
+        endWithNewline()
+        toggleOffOn()
+    }
+
+    yaml {
+        target("**/*.yaml")
+        trimTrailingWhitespace()
+        endWithNewline()
+        toggleOffOn()
+    }
+
+    kotlin {
+        target("**/*.kt")
+        ktlint()
+        trimTrailingWhitespace()
+        endWithNewline()
+        toggleOffOn()
+    }
+
+    kotlinGradle {
+        target("**/*.gradle.kts")
+        ktlint()
+        trimTrailingWhitespace()
+        endWithNewline()
+        toggleOffOn()
+    }
+
+    gherkin {
+        target("**/*.feature")
+        gherkinUtils()
+        trimTrailingWhitespace()
+        endWithNewline()
+        toggleOffOn()
+    }
+
+    toml {
+        target("**/*.toml")
+        versionCatalog()
+            .stripQuotedKeys(true)
+        trimTrailingWhitespace()
+        endWithNewline()
+        toggleOffOn()
+    }
+
+    json {
+        target("**/*.json")
+        targetExclude("**/.devcontainer/devcontainer.json")
+        gson()
+            .indentWithSpaces(4)
+            .sortByKeys()
+            .escapeHtml()
         trimTrailingWhitespace()
         endWithNewline()
         toggleOffOn()
